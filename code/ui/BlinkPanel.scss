@@ -1,0 +1,19 @@
+﻿blinkpanel {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+
+    .blink {
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        background-color: #111111;
+        transition: all 0.1s ease-in;
+
+        &.active {
+            opacity: 1;
+        }
+    }
+}

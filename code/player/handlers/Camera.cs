@@ -27,10 +27,10 @@ public partial class QuantumCamera : CameraMode {
 	public override void Activated() {
 		Position = Pawn.EyePosition;
 		Rotation = Pawn.EyeRotation;
-	}
+		Viewer = Pawn;
+	}	
 
 	public override void Update() {
-		Viewer = Pawn;
 		Position = Position.LerpTo(Pawn.EyePosition, Time.Delta * 15.0f);
 		Rotation = Rotation.Lerp(Rotation, Pawn.EyeRotation, Time.Delta * 15.0f);
 	}

@@ -132,13 +132,16 @@ public partial class QuantumEntity : ModelEntity {
 
 	/// <summary> True if we care about a change in this object's visibility. </summary>
 	private bool ObserveChange() {
-		if(TimeSinceFocus < 5 || !ScreenVelocity.AlmostEqual(0, 0.001f))
-			return true;
-		return false;
+		return TimeSinceFocus < 5 || !ScreenVelocity.AlmostEqual(0, 0.001f);
 	}
 
 	/// <summary> Check if this object would be visible at a given transform. Used for regular active checks and prospective checks for quantum swaps. </summary>
 	private bool CheckVisibilityAtTransform(Transform transform) {
+		// can't see if we have our eyes closed
+		if(BlinkPanel.EyesClosed) {
+			return false;
+		}
+
 		// simple bounds check first
 		if(BoundsInsideFrustum(transform)) {
 			if(!VertexVisible(transform)) {
@@ -171,6 +174,8 @@ public partial class QuantumEntity : ModelEntity {
 				.Run();
 
 			if(trace.EndPosition.IsNearlyEqual(vertpos, 0.01f)) {
+				if(Debug.Enabled) 
+					DebugOverlay.Sphere(vertpos, 1, Color.Green, false, Time.Delta);
 				return true;
 			}
 		}
@@ -207,7 +212,6 @@ public partial class QuantumEntity : ModelEntity {
 		if(Debug.Enabled) {
 			// render bounds
 			foreach(var corner in Corners) {
-				DebugOverlay.Sphere(Position + corner * Rotation, 1, Color.Green, false, Time.Delta);
 				foreach(var corner2 in Corners) {
 					DebugOverlay.Line(Position + corner * Rotation, Position + corner2 * Rotation, Color.Green, Time.Delta, false);
 				}
